@@ -1,0 +1,30 @@
+name: Run Geyser Standalone
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # 每 5 小時自動重啟一次，突破 GitHub 6 小時限制
+    - cron: '0 */5 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-geyser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Download Geyser Standalone
+        run: |
+          curl -L -o Geyser-Standalone.jar https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/standalone
+
+      - name: Run Geyser
+        run: |
+          java -jar Geyser-Standalone.jar
